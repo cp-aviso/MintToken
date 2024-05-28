@@ -1,22 +1,33 @@
-#Create Token
-//SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT
+// Compatible with OpenZeppelin Contracts ^5.0.0
+pragma solidity ^0.8.20;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts@5.0.2/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts@5.0.2/access/Ownable.sol";
 
-contract CarloAvisoToken is ERC20 {
-    address public owner;
+contract AvisoToken is ERC20, Ownable {
 
-    constructor() ERC20("CarloAviso Token", "CAT") {
-        owner = msg.sender;
-        _mint(msg.sender, 1000000 * 10 ** decimals());
+    constructor(address initialOwner)
+        ERC20("AvisoToken", "AVS")
+        Ownable(initialOwner)
+    {}
+
+    function mint(uint256 amount) public onlyOwner {
+        _mint(msg.sender, amount);
     }
 
-    function mint(address to, uint256 amount) public {
-        require(msg.sender == owner, "Only owner can mint");
+    function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
     }
+
+      function transferTo(address to, uint256 amount) public  {
+        transfer(to, amount);
+    }
+    
+
     function burn(uint256 amount) public {
         _burn(msg.sender, amount);
-    }
+    }  
+
+  
 }
